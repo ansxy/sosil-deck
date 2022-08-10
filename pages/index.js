@@ -1,8 +1,30 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import user from "../utils/models/user";
+import answer from "../utils/models/answer";
+import connectMongo from "../utils/connectMongo";
 
-export default function Home() {
+export const getServerSideProps = async () => {
+  try {
+    await connectMongo();
+    console.log("Fetching Data");
+    const users = await user.find();
+    console.log("Fetched Data");
+    return {
+      props: {
+        users: JSON.parse(JSON.stringify(users)),
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      notFound: true,
+    };
+  }
+};
+
+export default function Home({ users }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -17,7 +39,7 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -29,6 +51,7 @@ export default function Home() {
 
           <a href="https://nextjs.org/learn" className={styles.card}>
             <h2>Learn &rarr;</h2>
+            <p>{users.map((user) => console.log(user._id))}</p>
             <p>Learn about Next.js in an interactive course with quizzes!</p>
           </a>
 
@@ -58,12 +81,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
