@@ -38,11 +38,14 @@ export default function logPost({ posts }) {
   return (
     <div>
       <main>
-        <button onClick={logPostTest}>Create Test</button>
         <h1>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
-        <form></form>
+        <form method="post" action="/api/test/add">
+          <input type="text" id="first" name="testpost" />
+          <br></br>
+          <button type="submit">Create Test</button>
+        </form>
 
         <p>
           Get started by editing <code>pages/index.js</code>
