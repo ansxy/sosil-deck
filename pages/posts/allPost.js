@@ -22,8 +22,6 @@ const addAnswer = async (event) => {
     postId: event.target.answer.className,
     answer: event.target.answer.value,
   };
-  console.log(data.postId);
-
   const JSONdata = JSON.stringify(data);
 
   const endpoint = "/api/test/answer";
@@ -36,20 +34,20 @@ const addAnswer = async (event) => {
     body: JSONdata,
   };
   const response = await fetch(endpoint, options);
-
-  console.log(JSONdata);
   response.json();
 };
-//TODO : error it not show all comment for post
+//TODO : error it not show all comment for post (Fixed)
 export default function allPost({ data }) {
   return (
     <div>
-      {data.map((datas) => (
+      {data.flatMap((datas) => (
         <div key={datas._id}>
           <form method="post" onSubmit={addAnswer}>
             <h2 id="postId">{datas._id}</h2>
             <p>{datas.question}</p>
-            <p>{datas.answer}</p>
+            {datas.answer.map((data, i) => (
+              <p key={i + 1}>{data}</p>
+            ))}
             <input
               className={datas._id}
               type="text"
@@ -63,4 +61,4 @@ export default function allPost({ data }) {
       <p></p>
     </div>
   );
-}
+} //TODO : Make IT more Clean i thinks
